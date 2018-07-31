@@ -39,6 +39,8 @@ class Worker(threading.Thread):
                 magnet_link = i['links'][1]['href']
 
                 self.download(site, case, feed_id, title, magnet_link)
+
+            sleep(config.request_intervals)
                 
                 
     def download(self, site, case, feed_id, title, magnet_link):
