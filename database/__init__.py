@@ -5,7 +5,7 @@ from ._Base import Base
 from .DownloadLogs import DownloadLogs
 
 
-engine = create_engine(config.database_url, echo=False)
+engine = create_engine(config.database_url, echo=True)
 
 Base.metadata.create_all(engine)
 

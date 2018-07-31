@@ -1,8 +1,12 @@
 FROM python
 
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY . .
 
-RUN apt-get update -y && pip install --no-cache-dir -r requirements.txt
+RUN apt-get update -y && apt-get install  \
+        python-mysqldb && \
+    pip install --no-cache-dir -r requirements.txt
+
+VOLUME ["/app/config.yml"]
 
 CMD ["python", "./main.py"]
