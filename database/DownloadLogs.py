@@ -8,9 +8,9 @@ class DownloadLogs(Base):
     __tablename__ = 'download_logs'
 
     id       = Column(String(36), primary_key=True)
-    site     = Column(String)
-    case     = Column(String)
-    feed_id  = Column(String)
+    site     = Column(String(24))
+    case     = Column(String(128))
+    feed_id  = Column(String(256))
     createAt = Column(DateTime)
 
     def __init__(self, site, case, feed_id):
