@@ -80,4 +80,5 @@ while True:
     task = Worker()
     task.start()
     task.join()
+    logger.info('next task on %ss after' % config.refresh)
     sleep(config.refresh)

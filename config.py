@@ -3,6 +3,7 @@ import yaml
 
 
 database_url = os.environ.get('database_url', 'sqlite:///case.db')
+database_debug = os.environ.get('database_debug', False)
 
 qbittorrent_host = os.environ.get('qbittorrent_host', '127.0.0.1')
 qbittorrent_port = os.environ.get('qbittorrent_port', '8080')
