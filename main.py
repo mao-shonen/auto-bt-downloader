@@ -16,6 +16,7 @@ class Worker(threading.Thread):
 
     def run(self):
         self.dmhy()
+        #self.nyaa()
 
     def dmhy(self):
         site = '動漫花園'
