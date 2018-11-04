@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import config as cfg
 import os
 import yaml

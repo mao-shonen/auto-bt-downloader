@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import yaml
 from time import sleep
 from utils import logger

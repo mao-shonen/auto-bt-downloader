@@ -1,15 +1,19 @@
-
 apps:
   - name:   app
     script: app.py
     watch:  true
     env: &env
-      app_host:     0.0.0.0
-      app_port:     80
-      database_url: mysql://app_downloader:y7R8cet1t4puFIwIS7V87iz16iLiG7@192.168.88.2:3306/auto-bt-downloader?charset=utf8
+      app_host:     192.168.1.0
+      app_port:     5000
+      database_url: sqlite:///case.db
+
+      qbittorrent_host:   127.0.0.1
+      qbittorrent_port:   8080
+      qbittorrent_user:   admin
+      qbittorrent_passwd: admin
 
   - name:     worker
     script:   worker.py
     watch:  true
     env:
-      *env
+      <<: *env
