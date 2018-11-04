@@ -14,7 +14,6 @@ class Worker(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.cases = yaml.load(open('case.yml', 'r', encoding='utf-8'))
-        print(self.cases)
 
     def run(self):
         self.dmhy()

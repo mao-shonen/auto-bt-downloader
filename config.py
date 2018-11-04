@@ -1,6 +1,7 @@
 import os
 import hashlib
 
+dev_mode = bool(os.environ.get('dev_mode', False))
 users = os.environ.get('users', 'admin:admin') #user1:passwd1, user2:passwd2, ...
 
 app_host = os.environ.get('app_host', '0.0.0.0')
