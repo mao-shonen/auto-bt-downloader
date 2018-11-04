@@ -1,7 +1,8 @@
 apps:
   - name:   app
-    script: app.py
-    watch:  true
+    script: python3
+    args:   app.py
+    watch:  false
     env: &env
       app_host:     192.168.1.0
       app_port:     5000
@@ -13,7 +14,8 @@ apps:
       qbittorrent_passwd: admin
 
   - name:     worker
-    script:   worker.py
-    watch:  true
+    script:   python3
+    args:     worker.py
+    watch:  false
     env:
       <<: *env
