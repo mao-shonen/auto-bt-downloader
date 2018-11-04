@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>auto-bt-downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.7/theme-chalk/index.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.7/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <el-card style="width: 350px; float:left; margin: 15px">
+        <el-radio v-for="item in website_list" @change="refresh" v-model="website" :label="item" border>{{item}}</el-radio>
+    </el-card>
+
+    <el-card style="width: 400px; float:left; margin-top: 15px">
+        <el-button @click="create()" type="primary" icon="el-icon-edit" circle></el-button>
+        <el-button @click="update()" type="danger" icon="el-icon-upload" circle></el-button>
+        <el-autocomplete v-model="search" :fetch-suggestions="searchEvent" placeholder="關鍵字" prefix-icon="el-icon-search" circle></el-autocomplete>
+    </el-card>
+    
+    <el-card style="width: 1200px; clear:both; margin: 15px">
+        <el-table :data="table_filter" style="width: 100%" stripe>
+                <el-table-column label="任務" width="300" prop="name" sortable>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.name" placeholder="任務"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="關鍵字" prop="keys" sortable>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.keys" placeholder="關鍵字"></el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="100">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="danger" @click="remove(scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+    </el-card>
+
+</div>
+</body>
+
+<script>
+var vm = new Vue({
+    el: '#app',
+    data: {
+        search: '',
+        website_list: [],
+        website: '',
+        table: {},
+        table_filter: [],
+    },
+
+    mounted() {
+        this.list()
+    },
+
+    methods: {
+        //取得表格
+        list() {
+            let self = this
+            console.log('list ->')
+            axios.post('/list', {
+                    'site': 'dmhy',
+                })
+                .then((res) => {
+                    console.log('list <-', res.data)
+                    self.table = res.data
+                    self.website_list = Object.keys(self.table)
+                    //self.website = self.website_list[0]
+                    self.website = '動漫花園'
+                    self.refresh()
+                })
+                .catch((err) => {
+                    console.log('list <-', err.response.data)
+                    self.$message.error(err.response.data)
+                })
+        },
+
+        //刷新表格
+        refresh() {
+            this.table_filter = []
+
+            for (let item of this.table[this.website]) {
+                if (this.search == '' || item.name.indexOf(this.search) > -1 || item.keys.indexOf(this.search) > -1) {
+                    this.table_filter.push(item)
+                }
+            }
+        },
+
+        //搜尋
+        searchEvent(keyword, callback) {
+            console.log('search', this.search)
+            this.refresh()
+            callback([])
+        },
+
+        //新增一行
+        create() {
+            item = {name: '', keys: ''}
+            this.table_filter.splice(0, 0, item)
+            this.table[this.website].splice(0, 0, item)
+        },
+
+        //刪除一行
+        remove(index) {
+            this.$confirm('確定刪除?')
+                .then(() => {
+                    this.table_filter.splice(index, 1)
+                    this.table[this.website].splice(index, 1)
+                })
+        },
+
+        //更新
+        update() {
+            let self = this
+            this.$confirm('確定儲存?')
+                .then(() => {
+                    console.log('update ->', self.data)
+                    axios.post('/update', self.table)
+                        .then((res) => {
+                            console.log('update <-', res.data)
+                            self.$message(res.data)
+                        })
+                        .catch((err) => {
+                            console.log('update <-', err.response.data)
+                            self.$message.error(err.response.data)
+                        })
+                })
+        },
+    },
+})
+</script>
+</html>

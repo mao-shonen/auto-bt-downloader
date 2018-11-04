@@ -12,7 +12,8 @@ from models import Qbittorrent
 class Worker(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.cases = config.case_loader()
+        self.cases = yaml.load(open('case.yml', 'r', encoding='utf-8'))
+        print(self.cases)
 
     def run(self):
         self.dmhy()
@@ -21,8 +22,11 @@ class Worker(threading.Thread):
     def dmhy(self):
         site = '動漫花園'
 
-        for case, keys in self.cases[site].items():
-            logger.info('搜尋 %s', case)
+        for case in self.cases[site]:
+            name = case['name']
+            keys = case['keys']
+
+            logger.info('搜尋 %s', name)
 
             for _ in range(config.request_retry):
                 try:
@@ -39,7 +43,7 @@ class Worker(threading.Thread):
                 title = i['title']
                 magnet_link = i['links'][1]['href']
 
-                self.download(site, case, feed_id, title, magnet_link)
+                self.download(site, name, feed_id, title, magnet_link)
 
             sleep(config.request_intervals)
                 
@@ -67,8 +71,8 @@ class Worker(threading.Thread):
         bt.download_from_url(magnet_link, category=case)
 
         try:
-            row = DownloadLogs(site, case, feed_id)
-            db.add(row)
+            data = DownloadLogs(site, case, feed_id)
+            db.add(data)
             db.commit()
         except Exception as e:
             db.rollback()

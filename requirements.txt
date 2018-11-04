@@ -3,3 +3,5 @@ requests
 feedparser
 sqlalchemy
 mysqlclient
+flask
+

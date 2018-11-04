@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>auto-downloader Login</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.7/theme-chalk/index.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.7/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script src="static/sha256.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <el-card class="box-card" style="height: 200px; width: 400px; position: absolute; top: 50%; left: 50%; margin-top: -100px; margin-left: -200px;">
+            <el-form :model="loginForm" ref="loginForm" status-icon label-width="50px">
+                <el-form-item label="帳號">
+                    <el-input v-model="loginForm.account" ref="account_input"></el-input>
+                </el-form-item>
+                <el-form-item label="密碼">
+                    <el-input v-model="loginForm.passwd" @keyup.enter.native="submitForm" type="password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm()" style="margin-left: 100px;">登入</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+    </div>
+</body>
+
+
+<script>
+var vm = new Vue({
+    el: '#app',
+    data: {
+        loginForm: {
+            account: '',
+            passwd: '',
+        },
+    },
+
+    mounted() {
+        this.$refs.account_input.focus()
+    },
+
+    methods: {
+        submitForm() {
+            console.log(this.loginForm.passwd)
+            axios.post('/login', {
+                    account: this.loginForm.account,
+                    passwd: sha256(this.loginForm.passwd),
+                })
+                .then((res) => {
+                    console.log(res.data)
+                    urlParams = new URLSearchParams(window.location.search)
+                    next = urlParams.get('next')
+                    next == null ? window.location.reload() : window.location.href = next
+                })
+                .catch((err) => {
+                    console.log(err)
+                    vm.$message.error(err.response.data)
+                })
+        },
+    }
+})
+</script>
+</html>

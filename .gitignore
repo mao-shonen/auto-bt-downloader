@@ -103,5 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+
 *.cmd
 *.db
+*.yml
+pm2.yml

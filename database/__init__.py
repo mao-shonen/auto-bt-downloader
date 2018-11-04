@@ -2,6 +2,7 @@ import config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from ._Base import Base
+from .Case import Case
 from .DownloadLogs import DownloadLogs
 
 

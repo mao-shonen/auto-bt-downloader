@@ -1,0 +1,15 @@
+
+apps:
+  - name:   app
+    script: app.py
+    watch:  true
+    env: &env
+      app_host:     0.0.0.0
+      app_port:     80
+      database_url: mysql://app_downloader:y7R8cet1t4puFIwIS7V87iz16iLiG7@192.168.88.2:3306/auto-bt-downloader?charset=utf8
+
+  - name:     worker
+    script:   worker.py
+    watch:  true
+    env:
+      *env
