@@ -125,7 +125,7 @@ var vm = new Vue({
                     axios.post('/update', self.table)
                         .then((res) => {
                             console.log('update <-', res.data)
-                            self.$message(res.data)
+                            self.$message({message: res.data, type: 'success'})
                         })
                         .catch((err) => {
                             console.log('update <-', err.response.data)
